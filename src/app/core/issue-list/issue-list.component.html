@@ -1,0 +1,47 @@
+<ng-container *ngIf="showReportIssue === false">
+
+    <button class="btn btn-primary" (click)="showReportIssue = true">Add new issue</button>
+    <button class="btn btn-outline-primary" (click)="showReportIssue = true">Resolve an issue</button>
+
+
+    <clr-datagrid>
+
+        
+        <clr-dg-column [clrDgField]="'issueNo'" [clrDgColType]="'number'">Issue No</clr-dg-column>
+        <clr-dg-column [clrDgField]="'type'">Type</clr-dg-column>
+        <clr-dg-column [clrDgField]="'title'">Title</clr-dg-column>
+        <clr-dg-column [clrDgField]="'description'">Description</clr-dg-column>
+        <clr-dg-column [clrDgField]="'priority'">Priority</clr-dg-column>
+
+
+        <clr-dg-row *clrDgItems="let issue of issues">
+
+            <clr-dg-action-overflow>
+                <button class="action-item" (click)="selectedIssue = issue">Resolve</button>
+            </clr-dg-action-overflow>
+
+            <clr-dg-cell>{{issue.issueNo}}</clr-dg-cell>
+            <clr-dg-cell>{{issue.type}}</clr-dg-cell>
+            <clr-dg-cell>{{issue.title}}</clr-dg-cell>
+            <clr-dg-cell>{{issue.description}}</clr-dg-cell>
+            <clr-dg-cell>
+                <button class="btn" [class.btn-outline-danger]="issue.priority === 'high'">{{issue.priority}}</button>
+            </clr-dg-cell>
+        </clr-dg-row>
+
+
+        <clr-dg-footer> 
+
+            <clr-dg-pagination #pagination [clrDgPageSize]="5">
+                <clr-dg-page-size [clrPageSizeOptions]="[5,10,20,50,100]">Issues per page</clr-dg-page-size>
+                {{pagination.firstItem + 1}} - {{pagination.lastItem + 1}} of {{pagination.totalItems}} items
+            </clr-dg-pagination>
+
+        </clr-dg-footer>
+
+
+    </clr-datagrid>
+
+</ng-container>
+<app-issue-report *ngIf="showReportIssue == true" (formClose)="onCloseReport()"></app-issue-report>
+<app-confirm-dialog *ngIf="selectedIssue"[issueNo]="selectedIssue.issueNo"(confirm)="onConfirm($event)"></app-confirm-dialog>
